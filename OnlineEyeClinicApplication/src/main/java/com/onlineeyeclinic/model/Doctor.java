@@ -6,6 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 
 /** This is entity class for patients with default constructor, parameterized constructor along with getters and setters
  * 
@@ -14,7 +20,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "DoctorModel")
+@Table(name = "Doctor")
 public class Doctor {
 	
 	/**
@@ -26,24 +32,39 @@ public class Doctor {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(length = 5)
-	private Integer doctorId;
-	@Column(length = 20)
+	@Column(name = "Doctor_Id")
+	private Long doctorId;
+	
+	@Column(name = "Doctor_Name")
+	@NotNull(message = "Name Should Not be Null")
 	private String doctorName;
-	@Column(length = 20)
+	
+	@Column(name = "Consultaion_Time")
+	@NotEmpty(message = "Cousultation Time should be Mentioned")
 	private String doctorConsultationTime;
-	@Column(length = 10)
-	private Long doctorMobile;
-	@Column(length = 20)
+	
+	@Column(name = "Mobile_Number")
+	@Pattern(regexp = "^[6-9][0-9]{9}+$", message = "Enter Valid Mobile Number")
+	private String doctorMobile;
+	
+	@Column(name = "Email")
+	@NotNull(message = "Doctor Mail is Compulsory")
+	@Email
 	private String doctorEmail;
-	@Column(length = 10)
+	
+	@Column(name = "Username")
+	@NotNull(message = "UserName should not be Empty")
+	@Size(min = 5, max = 10)
 	private String userName;
-	@Column(length = 11)
+	
+	@Column(name = "Password")
+	@NotNull(message = "Password Should not be Empty")
+	@Size(min = 8, max = 20)
 	private String password;
-	@Column(length = 20)
+	
+	@Column(name = "Address")
+	@NotEmpty(message = "Address is Compulsory")
 	private String address;
-	//@Autowired
-	//private Tests test;
 	
 	/**
 	 * Default Constructor
@@ -59,7 +80,7 @@ public class Doctor {
 	
 	
 
-	public Doctor(String doctorName, String doctorConsultationTime, Long doctorMobile, String doctorEmail,
+	public Doctor(String doctorName, String doctorConsultationTime, String doctorMobile, String doctorEmail,
 			String userName, String password, String address) {
 		super();
 		this.doctorName = doctorName;
@@ -77,13 +98,13 @@ public class Doctor {
 	 */
 	
 //
-	public Integer getDoctorId() {
+	public Long getDoctorId() {
 		return doctorId;
 	}
 
 	
 
-	public void setDoctorId(Integer doctorId) {
+	public void setDoctorId(Long doctorId) {
 		this.doctorId = doctorId;
 	}
 
@@ -103,11 +124,11 @@ public class Doctor {
 		this.doctorConsultationTime = doctorConsultationTime;
 	}
 
-	public long getDoctorMobile() {
+	public String getDoctorMobile() {
 		return doctorMobile;
 	}
 
-	public void setDoctorMobile(Long doctorMobile) {
+	public void setDoctorMobile(String doctorMobile) {
 		this.doctorMobile = doctorMobile;
 	}
 
@@ -142,14 +163,6 @@ public class Doctor {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-//	public Tests getTest() {
-//		return test;
-//	}
-//
-//	public void setTest(Tests test) {
-//		this.test = test;
-//	}
 
 
 	@Override

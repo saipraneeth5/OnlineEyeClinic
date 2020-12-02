@@ -16,8 +16,10 @@ import com.onlineeyeclinic.repository.IDoctorRepository;
 @Transactional
 public class DoctorServiceImpl implements IDoctorService {
 	
+	private static final String ERROR_MESSAGE = "Doctor ID Not Found";
+	
 	@Autowired
-	IDoctorRepository repository;
+	private IDoctorRepository repository;
 
 	@Override
 	public Doctor addDoctor(Doctor doctor) {
@@ -26,36 +28,37 @@ public class DoctorServiceImpl implements IDoctorService {
 	}
 
 	@Override
-	public Doctor updateDoctor(Doctor doctor) {
+	public Doctor updateDoctor(Doctor doctor) throws DoctorIdNotFoundException {
+		Long doctorId = doctor.getDoctorId();
+		Optional<Doctor> doc = repository.findById(doctorId);
+		if(doc.isEmpty())
+			throw new DoctorIdNotFoundException(ERROR_MESSAGE);
 		doctor = repository.save(doctor);
 		return doctor;
 	}
 
 	@Override
-	public Doctor deleteDoctor(int doctorId) throws DoctorIdNotFoundException {
+	public Doctor deleteDoctor(Long doctorId) throws DoctorIdNotFoundException {
 		Optional<Doctor> doc = repository.findById(doctorId);
-		
-		if(doc == null)
-			throw new DoctorIdNotFoundException("Doctor ID Not Found");
-		else
-			repository.deleteById(doctorId);
-		
+		if(doc.isEmpty())
+			throw new DoctorIdNotFoundException(ERROR_MESSAGE);
+		repository.deleteById(doctorId);
 		return null;
+		
 	}
 
 	@Override
-	public Optional<Doctor> viewDoctor(int doctorId) throws DoctorIdNotFoundException {
+	public Optional<Doctor> viewDoctor(Long doctorId) throws DoctorIdNotFoundException {
 		Optional<Doctor> doc = repository.findById(doctorId);
-		if(doc == null)
-			throw new DoctorIdNotFoundException("Doctor ID Not Found");
+		if(doc.isEmpty())
+			throw new DoctorIdNotFoundException(ERROR_MESSAGE);
 		return doc;
 
 	}
 
 	@Override
 	public List<Doctor> viewDoctorsList() {
-		List<Doctor> allDoctors = repository.viewDoctorsList();
-		return allDoctors;
+		return repository.findAll();
 	}
 
 //	@Override

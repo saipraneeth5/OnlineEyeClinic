@@ -20,7 +20,7 @@ public class OnlineEyeClinicApplication {
 	@Bean
     public Docket productApi() {
        return new Docket(DocumentationType.SWAGGER_2).select()
-          .apis(RequestHandlerSelectors.basePackage("com.onlineeyeclinic")).build();
+          .apis(RequestHandlerSelectors.basePackage("com.cg.onlineeyeclinic")).build();
 	}
 
 }

@@ -17,8 +17,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
-	
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -34,15 +34,56 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
 		return new ResponseEntity<>(body, headers, status);
 	}
-	
-	@ExceptionHandler(value = DoctorIdNotFoundException.class)
-	public ResponseEntity<Object> handleDoctorIdNotFoundException(DoctorIdNotFoundException exception, WebRequest webRequest){
+
+	@ExceptionHandler(value = PatientIdNotFoundException.class)
+	public ResponseEntity<Object> handlePatientIdNotFoundException(PatientIdNotFoundException exception,
+			WebRequest webRequest) {
+		ExceptionResponse errorDetails = new ExceptionResponse(404, exception.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(value = ReportIdNotFoundException.class)
+	public ResponseEntity<Object> handleReportIdNotFoundException(ReportIdNotFoundException exception,
+			WebRequest webRequest) {
+		ExceptionResponse errorDetails = new ExceptionResponse(404, exception.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(value = AppointmentIdNotFoundException.class)
+	public ResponseEntity<Object> handleAppointmentIdNotFoundException(AppointmentIdNotFoundException exception,
+			WebRequest webRequest) {
+		ExceptionResponse errorDetails = new ExceptionResponse(404, exception.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(value = InvalidAppointmentException.class)
+	public ResponseEntity<Object> handleInvalidAppointmentException(InvalidAppointmentException exception,
+			WebRequest webRequest) {
+		ExceptionResponse errorDetails = new ExceptionResponse(404, exception.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+
+	public ResponseEntity<Object> handleDoctorIdNotFoundException(DoctorIdNotFoundException exception,
+			WebRequest webRequest) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse();
 		exceptionResponse.setStatus(404);
-		exceptionResponse.setTime(LocalDateTime.now());
+		exceptionResponse.setTimeStamp(LocalDateTime.now());
 		exceptionResponse.setMessage(exception.getMessage());
-		
+
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
 	}
 
+	@ExceptionHandler(value = TestIdNotFoundException.class)
+	public ResponseEntity<Object> handleTestIdNotFoundException(TestIdNotFoundException exception,
+			WebRequest webRequest) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(404, exception.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(value = SpectaclesIdNotFoundException.class)
+	public ResponseEntity<Object> handlePatientIdNotFoundException(SpectaclesIdNotFoundException exception,
+			WebRequest webRequest) {
+		ExceptionResponse errorDetails = new ExceptionResponse(404, exception.getMessage(), LocalDateTime.now());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
 }

@@ -58,8 +58,7 @@ public class Doctor {
 	private String userName;
 	
 	@Column(name = "Password")
-	@NotNull(message = "Password Should not be Empty")
-	@Size(min = 8, max = 20)
+	@Pattern(regexp = "[A-Za-z0-9@#$%^&]{8,20}+$", message = "Password Must be between 8 to 20 characters")
 	private String password;
 	
 	@Column(name = "Address")

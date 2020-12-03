@@ -9,48 +9,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.onlineeyeclinic.exception.DoctorIdNotFoundException;
+import com.onlineeyeclinic.model.Appointment;
 import com.onlineeyeclinic.model.Doctor;
+import com.onlineeyeclinic.model.Tests;
 import com.onlineeyeclinic.repository.IDoctorRepository;
 
-@Service("name = DoctorService")
+@Service(value = "doctorService")
 @Transactional
 public class DoctorServiceImpl implements IDoctorService {
-	
+
 	private static final String ERROR_MESSAGE = "Doctor ID Not Found";
-	
+
 	@Autowired
-	private IDoctorRepository repository;
+	private IDoctorRepository doctorRepository;
+
+	@Autowired
+	private IAppointmentService appointmentService;
+
+	@Autowired
+	private ITestService testService;
 
 	@Override
 	public Doctor addDoctor(Doctor doctor) {
-		doctor = repository.save(doctor);
-		return doctor;
+		return doctorRepository.save(doctor);
 	}
 
 	@Override
-	public Doctor updateDoctor(Doctor doctor) throws DoctorIdNotFoundException {
+	public Doctor updateDoctor(Doctor doctor) {
 		Long doctorId = doctor.getDoctorId();
-		Optional<Doctor> doc = repository.findById(doctorId);
-		if(doc.isEmpty())
+		Optional<Doctor> doc = doctorRepository.findById(doctorId);
+		if (doc.isEmpty())
 			throw new DoctorIdNotFoundException(ERROR_MESSAGE);
-		doctor = repository.save(doctor);
-		return doctor;
+		return doctorRepository.save(doctor);
 	}
 
 	@Override
-	public Doctor deleteDoctor(Long doctorId) throws DoctorIdNotFoundException {
-		Optional<Doctor> doc = repository.findById(doctorId);
-		if(doc.isEmpty())
+	public Doctor deleteDoctor(Long doctorId) {
+		Optional<Doctor> doc = doctorRepository.findById(doctorId);
+		if (doc.isEmpty())
 			throw new DoctorIdNotFoundException(ERROR_MESSAGE);
-		repository.deleteById(doctorId);
+		doctorRepository.deleteById(doctorId);
 		return null;
-		
+
 	}
 
 	@Override
-	public Optional<Doctor> viewDoctor(Long doctorId) throws DoctorIdNotFoundException {
-		Optional<Doctor> doc = repository.findById(doctorId);
-		if(doc.isEmpty())
+	public Optional<Doctor> viewDoctor(Long doctorId) {
+		Optional<Doctor> doc = doctorRepository.findById(doctorId);
+		if (doc.isEmpty())
 			throw new DoctorIdNotFoundException(ERROR_MESSAGE);
 		return doc;
 
@@ -58,19 +64,17 @@ public class DoctorServiceImpl implements IDoctorService {
 
 	@Override
 	public List<Doctor> viewDoctorsList() {
-		return repository.findAll();
+		return doctorRepository.findAll();
 	}
 
-//	@Override
-//	public List<Appointment> viewAppointments() {
-//		List<Appointment> allAppointments = repository.viewAppointments();
-//		return allAppointments;
-//	}
-//
-//	@Override
-//	public Tests createTest(Tests test) {
-//		
-//		return null;
-//	}
+	@Override
+	public List<Appointment> viewAppointments() {
+		return appointmentService.viewAllAppointments();
+	}
+
+	@Override
+	public Tests createTest(Tests test) {
+		return testService.addTest(test);
+	}
 
 }
